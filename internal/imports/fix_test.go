@@ -11,7 +11,6 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -1291,11 +1290,6 @@ func bar() {
 // Test support for packages in GOPATH that are actually symlinks.
 // Also test that a symlink loop does not block the process.
 func TestImportSymlinks(t *testing.T) {
-	switch runtime.GOOS {
-	case "windows", "plan9":
-		t.Skipf("skipping test on %q as there are no symlinks", runtime.GOOS)
-	}
-
 	const input = `package p
 
 var (
@@ -1331,11 +1325,6 @@ var (
 }
 
 func TestImportSymlinksWithIgnore(t *testing.T) {
-	switch runtime.GOOS {
-	case "windows", "plan9":
-		t.Skipf("skipping test on %q as there are no symlinks", runtime.GOOS)
-	}
-
 	const input = `package p
 
 var (
