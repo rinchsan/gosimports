@@ -10,12 +10,13 @@ import (
 	"bytes"
 	"fmt"
 	"go/build"
-	exec "golang.org/x/sys/execabs"
 	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
 	"sync"
+
+	exec "golang.org/x/sys/execabs"
 )
 
 // Testing is an abstraction of a *testing.T.
@@ -210,5 +211,16 @@ func NeedsGo1Point(t Testing, x int) {
 	}
 	if Go1Point() < x {
 		t.Skipf("running Go version %q is version 1.%d, older than required 1.%d", runtime.Version(), Go1Point(), x)
+	}
+}
+
+// SkipAfterGo1Point skips t if the Go version used to run the test is newer than
+// 1.x.
+func SkipAfterGo1Point(t Testing, x int) {
+	if t, ok := t.(helperer); ok {
+		t.Helper()
+	}
+	if Go1Point() > x {
+		t.Skipf("running Go version %q is version 1.%d, newer than maximum 1.%d", runtime.Version(), Go1Point(), x)
 	}
 }
