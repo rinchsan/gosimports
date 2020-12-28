@@ -553,7 +553,6 @@ c = fmt.Printf
 
 import (
 	"fmt"
-
 	"gu"
 
 	"manypackages.com/packagea"
@@ -576,14 +575,6 @@ import "fmt"
 
 func main() { fmt.Println("Hello, world") }
 `,
-	},
-
-	{
-		name: "fragment_without_main",
-		in:   `func notmain(){fmt.Println("Hello, world")}`,
-		out: `import "fmt"
-
-func notmain() { fmt.Println("Hello, world") }`,
 	},
 
 	// Remove first import within in a 2nd/3rd/4th/etc. section.
@@ -644,15 +635,11 @@ var _, _, _, _, _ = fmt.Errorf, io.Copy, strings.Contains, renamed_packagea.A, B
 
 import (
 	"fmt"
-
-	renamed_packagea "manypackages.com/packagea"
-
 	"io"
-
-	. "manypackages.com/packageb"
-
 	"strings"
 
+	renamed_packagea "manypackages.com/packagea"
+	. "manypackages.com/packageb"
 	_ "manypackages.com/packagec"
 )
 
@@ -677,10 +664,10 @@ func main() { _, _ = fmt.Print, ast.Walk }
 		out: `package main
 
 import (
-	"fmt"    // A
-	"go/ast" // B
+	"fmt"
+	"go/ast"
 
-	_ "manypackages.com/packagec" // C
+	_ "manypackages.com/packagec"
 )
 
 func main() { _, _ = fmt.Print, ast.Walk }
@@ -951,7 +938,7 @@ func main() {
 
 import (
 	"fmt"
-	"math" // fun
+	"math"
 	"strings"
 )
 
@@ -981,7 +968,7 @@ func main() {
 import (
 	_ "io"
 	_ "net/http"
-	_ "net/http/pprof" // install the pprof http handlers
+	_ "net/http/pprof"
 	_ "strings"
 )
 
@@ -1009,7 +996,7 @@ func main() {
 import (
 	_ "io"
 	_ "net/http"
-	_ "net/http/pprof" // install the pprof http handlers
+	_ "net/http/pprof"
 	_ "strings"
 )
 
@@ -1048,7 +1035,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	_ "net/http/pprof" // install the pprof http handlers
+	_ "net/http/pprof"
 	"strings"
 
 	"manypackages.com/packagea"
