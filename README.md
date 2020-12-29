@@ -32,7 +32,7 @@ import (
 )
 ```
 
-↓ `$ gosimports -w`
+↓ `$ gosimports -w` :+1:
 
 ```go
 import (
@@ -44,6 +44,23 @@ import (
 	"strings"
 
 	gocmd "golang.org/x/tools/internal/gocommand"
+	"golang.org/x/tools/internal/imports"
+)
+```
+
+while `goimports` formatting like below :-1:
+
+```go
+import (
+	"bufio"
+	"errors"
+	"flag"
+	"runtime"
+	_ "runtime/pprof"
+	"strings"
+
+	gocmd "golang.org/x/tools/internal/gocommand"
+
 	"golang.org/x/tools/internal/imports"
 )
 ```
