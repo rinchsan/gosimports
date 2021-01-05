@@ -53,15 +53,19 @@ while `goimports` formatting like below :-1:
 ```go
 import (
 	"bufio"
+
+	// comment
+
+	"golang.org/x/tools/internal/imports"
+
 	"errors"
 	"flag"
-	"runtime"
-	_ "runtime/pprof"
-	"strings"
 
 	gocmd "golang.org/x/tools/internal/gocommand"
 
-	"golang.org/x/tools/internal/imports"
+	"runtime" // comment
+	_ "runtime/pprof"
+	"strings"
 )
 ```
 
