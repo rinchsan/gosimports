@@ -3,7 +3,7 @@
 ![](https://github.com/rinchsan/gosimports/workflows/CI/badge.svg)
 ![](https://img.shields.io/github/release/rinchsan/gosimports.svg?colorB=7E7E7E)
 
-Simpler goimports, hard fork of `golang.org/x/tools/cmd/goimports`
+Simpler goimports, originally forked from `golang.org/x/tools/cmd/goimports`
 
 ## Installation
 
