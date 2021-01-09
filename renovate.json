@@ -1,5 +1,8 @@
 {
   "extends": [
-    "config:base"
+    "github>rinchsan/renovate-config"
+  ],
+  "ignorePresets": [
+    ":dependencyDashboard"
   ]
 }
