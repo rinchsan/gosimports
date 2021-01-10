@@ -3,7 +3,7 @@
 ![](https://github.com/rinchsan/gosimports/workflows/CI/badge.svg)
 ![](https://img.shields.io/github/release/rinchsan/gosimports.svg?colorB=7E7E7E)
 
-:rocket: Just replace `goimports` with `gosimports` <br>
+:rocket: Just replace `goimports` with `gosimports` ! <br>
 :broom: Simpler than `goimports` <br>
 :100: Interface compatible with `goimports` (result is not compatible, but simpler) <br>
 :hammer: Originally forked from `golang.org/x/tools/cmd/goimports`
