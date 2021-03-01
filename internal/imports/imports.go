@@ -106,7 +106,7 @@ func formatFile(fileSet *token.FileSet, file *ast.File, src []byte, adjust func(
 	mergeImports(fileSet, file)
 	sortImports(opt.LocalPrefix, fileSet, file)
 	imps := astutil.Imports(fileSet, file)
-	impsByGroup := make(map[int][]*ast.ImportSpec, 0)
+	impsByGroup := make(map[int][]*ast.ImportSpec)
 	for _, impSection := range imps {
 		// Within each block of contiguous imports, see if any
 		// import lines are in different group numbers. If so,

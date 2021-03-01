@@ -173,7 +173,7 @@ func processFile(filename string, in io.Reader, out io.Writer, argType argumentT
 				return fmt.Errorf("computing diff: %s", err)
 			}
 			fmt.Printf("diff -u %s %s\n", filepath.ToSlash(filename+".orig"), filepath.ToSlash(filename))
-			out.Write(data)
+			_, _ = out.Write(data)
 		}
 	}
 
@@ -195,7 +195,7 @@ func visitFile(path string, f os.FileInfo, err error) error {
 }
 
 func walkDir(path string) {
-	filepath.Walk(path, visitFile)
+	_ = filepath.Walk(path, visitFile)
 }
 
 func main() {
@@ -239,7 +239,7 @@ func gofmtMain() {
 
 	if *cpuProfile != "" {
 		bw, flush := bufferedFileWriter(*cpuProfile)
-		pprof.StartCPUProfile(bw)
+		_ = pprof.StartCPUProfile(bw)
 		defer flush()
 		defer pprof.StopCPUProfile()
 	}

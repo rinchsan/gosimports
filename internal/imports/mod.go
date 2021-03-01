@@ -82,7 +82,7 @@ func (r *ModuleResolver) init() error {
 		r.modsByDir = []*gocommand.ModuleJSON{mainMod, r.dummyVendorMod}
 	} else {
 		// Vendor mode is off, so run go list -m ... to find everything.
-		r.initAllMods()
+		_ = r.initAllMods()
 	}
 
 	if gmc := r.env.Env["GOMODCACHE"]; gmc != "" {
@@ -109,20 +109,20 @@ func (r *ModuleResolver) init() error {
 	})
 
 	r.roots = []gopathwalk.Root{
-		{filepath.Join(goenv["GOROOT"], "/src"), gopathwalk.RootGOROOT},
+		{Path: filepath.Join(goenv["GOROOT"], "/src"), Type: gopathwalk.RootGOROOT},
 	}
 	if r.main != nil {
-		r.roots = append(r.roots, gopathwalk.Root{r.main.Dir, gopathwalk.RootCurrentModule})
+		r.roots = append(r.roots, gopathwalk.Root{Path: r.main.Dir, Type: gopathwalk.RootCurrentModule})
 	}
 	if vendorEnabled {
-		r.roots = append(r.roots, gopathwalk.Root{r.dummyVendorMod.Dir, gopathwalk.RootOther})
+		r.roots = append(r.roots, gopathwalk.Root{Path: r.dummyVendorMod.Dir, Type: gopathwalk.RootOther})
 	} else {
 		addDep := func(mod *gocommand.ModuleJSON) {
 			if mod.Replace == nil {
 				// This is redundant with the cache, but we'll skip it cheaply enough.
-				r.roots = append(r.roots, gopathwalk.Root{mod.Dir, gopathwalk.RootModuleCache})
+				r.roots = append(r.roots, gopathwalk.Root{Path: mod.Dir, Type: gopathwalk.RootModuleCache})
 			} else {
-				r.roots = append(r.roots, gopathwalk.Root{mod.Dir, gopathwalk.RootOther})
+				r.roots = append(r.roots, gopathwalk.Root{Path: mod.Dir, Type: gopathwalk.RootOther})
 			}
 		}
 		// Walk dependent modules before scanning the full mod cache, direct deps first.
@@ -136,7 +136,7 @@ func (r *ModuleResolver) init() error {
 				addDep(mod)
 			}
 		}
-		r.roots = append(r.roots, gopathwalk.Root{r.moduleCacheDir, gopathwalk.RootModuleCache})
+		r.roots = append(r.roots, gopathwalk.Root{Path: r.moduleCacheDir, Type: gopathwalk.RootModuleCache})
 	}
 
 	r.scannedRoots = map[gopathwalk.Root]bool{}
@@ -202,7 +202,7 @@ func (r *ModuleResolver) ClearForNewMod() {
 		otherCache:       r.otherCache,
 		scanSema:         r.scanSema,
 	}
-	r.init()
+	_ = r.init()
 	r.scanSema <- struct{}{}
 }
 
@@ -271,10 +271,6 @@ func (r *ModuleResolver) cacheStore(info directoryPackageInfo) {
 	} else {
 		r.otherCache.Store(info.dir, info)
 	}
-}
-
-func (r *ModuleResolver) cacheKeys() []string {
-	return append(r.moduleCacheCache.Keys(), r.otherCache.Keys()...)
 }
 
 // cachePackageName caches the package name for a dir already in the cache.
