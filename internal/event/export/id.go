@@ -42,7 +42,7 @@ func initGenerator() {
 	for _, p := range []interface{}{
 		&rngSeed, &traceIDAdd, &nextSpanID, &spanIDInc,
 	} {
-		binary.Read(crand.Reader, binary.LittleEndian, p)
+		_ = binary.Read(crand.Reader, binary.LittleEndian, p)
 	}
 	traceIDRand = rand.New(rand.NewSource(rngSeed))
 	spanIDInc |= 1

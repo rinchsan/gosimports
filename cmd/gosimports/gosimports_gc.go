@@ -16,7 +16,7 @@ var traceProfile = flag.String("trace", "", "trace profile output")
 func doTrace() func() {
 	if *traceProfile != "" {
 		bw, flush := bufferedFileWriter(*traceProfile)
-		trace.Start(bw)
+		_ = trace.Start(bw)
 		return func() {
 			flush()
 			trace.Stop()

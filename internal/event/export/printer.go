@@ -19,25 +19,25 @@ type Printer struct {
 func (p *Printer) WriteEvent(w io.Writer, ev core.Event, lm label.Map) {
 	buf := p.buffer[:0]
 	if !ev.At().IsZero() {
-		w.Write(ev.At().AppendFormat(buf, "2006/01/02 15:04:05 "))
+		_, _ = w.Write(ev.At().AppendFormat(buf, "2006/01/02 15:04:05 "))
 	}
 	msg := keys.Msg.Get(lm)
-	io.WriteString(w, msg)
+	_, _ = io.WriteString(w, msg)
 	if err := keys.Err.Get(lm); err != nil {
 		if msg != "" {
-			io.WriteString(w, ": ")
+			_, _ = io.WriteString(w, ": ")
 		}
-		io.WriteString(w, err.Error())
+		_, _ = io.WriteString(w, err.Error())
 	}
 	for index := 0; ev.Valid(index); index++ {
 		l := ev.Label(index)
 		if !l.Valid() || l.Key() == keys.Msg || l.Key() == keys.Err {
 			continue
 		}
-		io.WriteString(w, "\n\t")
-		io.WriteString(w, l.Key().Name())
-		io.WriteString(w, "=")
+		_, _ = io.WriteString(w, "\n\t")
+		_, _ = io.WriteString(w, l.Key().Name())
+		_, _ = io.WriteString(w, "=")
 		l.Key().Format(w, buf, l)
 	}
-	io.WriteString(w, "\n")
+	_, _ = io.WriteString(w, "\n")
 }

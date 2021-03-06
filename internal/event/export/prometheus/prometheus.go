@@ -78,7 +78,7 @@ func (e *Exporter) row(w http.ResponseWriter, name string, group []label.Label, 
 	}
 	if buf.Len() > 0 {
 		fmt.Fprint(w, "{")
-		buf.WriteTo(w)
+		_, _ = buf.WriteTo(w)
 		fmt.Fprint(w, "}")
 	}
 	fmt.Fprintf(w, " %v\n", value)

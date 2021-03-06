@@ -882,7 +882,7 @@ func TestInvalidModCache(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	scanToSlice(resolver, nil)
+	_, _ = scanToSlice(resolver, nil)
 }
 
 func TestGetCandidatesRanking(t *testing.T) {
@@ -962,10 +962,10 @@ func BenchmarkScanModCache(b *testing.B) {
 	if err != nil {
 		b.Fatal(err)
 	}
-	scanToSlice(resolver, exclude)
+	_, _ = scanToSlice(resolver, exclude)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		scanToSlice(resolver, exclude)
+		_, _ = scanToSlice(resolver, exclude)
 		resolver.(*ModuleResolver).ClearForNewScan()
 	}
 }

@@ -241,14 +241,14 @@ func runCmdContext(ctx context.Context, cmd *exec.Cmd) error {
 	case <-ctx.Done():
 	}
 	// Cancelled. Interrupt and see if it ends voluntarily.
-	cmd.Process.Signal(os.Interrupt)
+	_ = cmd.Process.Signal(os.Interrupt)
 	select {
 	case err := <-resChan:
 		return err
 	case <-time.After(time.Second):
 	}
 	// Didn't shut down in response to interrupt. Kill it hard.
-	cmd.Process.Kill()
+	_ = cmd.Process.Kill()
 	return <-resChan
 }
 

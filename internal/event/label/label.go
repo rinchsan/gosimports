@@ -129,11 +129,11 @@ func (t Label) Key() Key { return t.key }
 // Format is used for debug printing of labels.
 func (t Label) Format(f fmt.State, r rune) {
 	if !t.Valid() {
-		io.WriteString(f, `nil`)
+		_, _ = io.WriteString(f, `nil`)
 		return
 	}
-	io.WriteString(f, t.Key().Name())
-	io.WriteString(f, "=")
+	_, _ = io.WriteString(f, t.Key().Name())
+	_, _ = io.WriteString(f, "=")
 	var buf [128]byte
 	t.Key().Format(f, buf[:0], t)
 }
