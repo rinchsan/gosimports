@@ -8,9 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"reflect"
 	"regexp"
-	"sort"
 	"strings"
 	"sync"
 	"testing"
@@ -883,72 +881,6 @@ func TestInvalidModCache(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, _ = scanToSlice(resolver, nil)
-}
-
-func TestGetCandidatesRanking(t *testing.T) {
-	mt := setup(t, `
--- go.mod --
-module example.com
-
-require rsc.io/quote v1.5.1
-require rsc.io/quote/v3 v3.0.0
-
--- rpackage/x.go --
-package rpackage
-import (
-	_ "rsc.io/quote"
-	_ "rsc.io/quote/v3"
-)
-`, "")
-	defer mt.cleanup()
-
-	if _, err := mt.env.invokeGo(context.Background(), "mod", "download", "rsc.io/quote/v2@v2.0.1"); err != nil {
-		t.Fatal(err)
-	}
-
-	type res struct {
-		relevance  float64
-		name, path string
-	}
-	want := []res{
-		// Stdlib
-		{7, "bytes", "bytes"},
-		{7, "http", "net/http"},
-		// Main module
-		{6, "rpackage", "example.com/rpackage"},
-		// Direct module deps with v2+ major version
-		{5.003, "quote", "rsc.io/quote/v3"},
-		// Direct module deps
-		{5, "quote", "rsc.io/quote"},
-		// Indirect deps
-		{4, "language", "golang.org/x/text/language"},
-		// Out of scope modules
-		{3, "quote", "rsc.io/quote/v2"},
-	}
-	var mu sync.Mutex
-	var got []res
-	add := func(c ImportFix) {
-		mu.Lock()
-		defer mu.Unlock()
-		for _, w := range want {
-			if c.StmtInfo.ImportPath == w.path {
-				got = append(got, res{c.Relevance, c.IdentName, c.StmtInfo.ImportPath})
-			}
-		}
-	}
-	if err := GetAllCandidates(context.Background(), add, "", "foo.go", "foo", mt.env); err != nil {
-		t.Fatalf("getAllCandidates() = %v", err)
-	}
-	sort.Slice(got, func(i, j int) bool {
-		ri, rj := got[i], got[j]
-		if ri.relevance != rj.relevance {
-			return ri.relevance > rj.relevance // Highest first.
-		}
-		return ri.name < rj.name
-	})
-	if !reflect.DeepEqual(want, got) {
-		t.Errorf("wanted candidates in order %v, got %v", want, got)
-	}
 }
 
 func BenchmarkScanModCache(b *testing.B) {

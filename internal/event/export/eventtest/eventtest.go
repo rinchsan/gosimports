@@ -38,11 +38,6 @@ type testingKeyType int
 
 const testingKey = testingKeyType(0)
 
-// NewContext returns a context you should use for the active test.
-func NewContext(ctx context.Context, t testing.TB) context.Context {
-	return context.WithValue(ctx, testingKey, t)
-}
-
 type testExporter struct {
 	mu     sync.Mutex
 	buffer *bytes.Buffer

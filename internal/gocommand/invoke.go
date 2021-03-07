@@ -55,13 +55,6 @@ func (runner *Runner) Run(ctx context.Context, inv Invocation) (*bytes.Buffer, e
 	return stdout, friendly
 }
 
-// RunPiped runs the invocation serially, always waiting for any concurrent
-// invocations to complete first.
-func (runner *Runner) RunPiped(ctx context.Context, inv Invocation, stdout, stderr io.Writer) error {
-	_, err := runner.runPiped(ctx, inv, stdout, stderr)
-	return err
-}
-
 // RunRaw runs the invocation, serializing requests only if they fight over
 // go.mod changes.
 func (runner *Runner) RunRaw(ctx context.Context, inv Invocation) (*bytes.Buffer, *bytes.Buffer, error, error) {

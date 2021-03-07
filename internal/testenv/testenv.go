@@ -175,72 +175,6 @@ func NeedsTool(t Testing, tool string) {
 	}
 }
 
-// NeedsGoPackages skips t if the go/packages driver (or 'go' tool) implied by
-// the current process environment is not present in the path.
-func NeedsGoPackages(t Testing) {
-	if t, ok := t.(helperer); ok {
-		t.Helper()
-	}
-
-	tool := os.Getenv("GOPACKAGESDRIVER")
-	switch tool {
-	case "off":
-		// "off" forces go/packages to use the go command.
-		tool = "go"
-	case "":
-		if _, err := exec.LookPath("gopackagesdriver"); err == nil {
-			tool = "gopackagesdriver"
-		} else {
-			tool = "go"
-		}
-	}
-
-	NeedsTool(t, tool)
-}
-
-// NeedsGoPackagesEnv skips t if the go/packages driver (or 'go' tool) implied
-// by env is not present in the path.
-func NeedsGoPackagesEnv(t Testing, env []string) {
-	if t, ok := t.(helperer); ok {
-		t.Helper()
-	}
-
-	for _, v := range env {
-		if strings.HasPrefix(v, "GOPACKAGESDRIVER=") {
-			tool := strings.TrimPrefix(v, "GOPACKAGESDRIVER=")
-			if tool == "off" {
-				NeedsTool(t, "go")
-			} else {
-				NeedsTool(t, tool)
-			}
-			return
-		}
-	}
-
-	NeedsGoPackages(t)
-}
-
-// NeedsGoBuild skips t if the current system can't build programs with ``go build''
-// and then run them with os.StartProcess or exec.Command.
-// android, and darwin/arm systems don't have the userspace go build needs to run,
-// and js/wasm doesn't support running subprocesses.
-func NeedsGoBuild(t Testing) {
-	if t, ok := t.(helperer); ok {
-		t.Helper()
-	}
-
-	NeedsTool(t, "go")
-
-	switch runtime.GOOS {
-	case "android", "js":
-		t.Skipf("skipping test: %v can't build and run Go binaries", runtime.GOOS)
-	case "darwin":
-		if strings.HasPrefix(runtime.GOARCH, "arm") {
-			t.Skipf("skipping test: darwin/arm can't build and run Go binaries")
-		}
-	}
-}
-
 // ExitIfSmallMachine emits a helpful diagnostic and calls os.Exit(0) if the
 // current machine is a builder known to have scarce resources.
 //
@@ -276,16 +210,5 @@ func NeedsGo1Point(t Testing, x int) {
 	}
 	if Go1Point() < x {
 		t.Skipf("running Go version %q is version 1.%d, older than required 1.%d", runtime.Version(), Go1Point(), x)
-	}
-}
-
-// SkipAfterGo1Point skips t if the Go version used to run the test is newer than
-// 1.x.
-func SkipAfterGo1Point(t Testing, x int) {
-	if t, ok := t.(helperer); ok {
-		t.Helper()
-	}
-	if Go1Point() > x {
-		t.Skipf("running Go version %q is version 1.%d, newer than maximum 1.%d", runtime.Version(), Go1Point(), x)
 	}
 }

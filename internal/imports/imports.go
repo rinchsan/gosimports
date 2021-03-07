@@ -59,49 +59,6 @@ func Process(filename string, src []byte, opt *Options) (formatted []byte, err e
 	return formatFile(fileSet, file, src, adjust, opt)
 }
 
-// FixImports returns a list of fixes to the imports that, when applied,
-// will leave the imports in the same state as Process. src and opt must
-// be specified.
-//
-// Note that filename's directory influences which imports can be chosen,
-// so it is important that filename be accurate.
-func FixImports(filename string, src []byte, opt *Options) (fixes []*ImportFix, err error) {
-	fileSet := token.NewFileSet()
-	file, _, err := parse(fileSet, filename, src, opt)
-	if err != nil {
-		return nil, err
-	}
-
-	return getFixes(fileSet, file, filename, opt.Env)
-}
-
-// ApplyFixes applies all of the fixes to the file and formats it. extraMode
-// is added in when parsing the file. src and opts must be specified, but no
-// env is needed.
-func ApplyFixes(fixes []*ImportFix, filename string, src []byte, opt *Options, extraMode parser.Mode) (formatted []byte, err error) {
-	// Don't use parse() -- we don't care about fragments or statement lists
-	// here, and we need to work with unparseable files.
-	fileSet := token.NewFileSet()
-	parserMode := parser.Mode(0)
-	if opt.Comments {
-		parserMode |= parser.ParseComments
-	}
-	if opt.AllErrors {
-		parserMode |= parser.AllErrors
-	}
-	parserMode |= extraMode
-
-	file, err := parser.ParseFile(fileSet, filename, src, parserMode)
-	if file == nil {
-		return nil, err
-	}
-
-	// Apply the fixes to the file.
-	apply(fileSet, file, fixes)
-
-	return formatFile(fileSet, file, src, nil, opt)
-}
-
 func formatFile(fileSet *token.FileSet, file *ast.File, src []byte, adjust func(orig []byte, src []byte) []byte, opt *Options) ([]byte, error) {
 	mergeImports(fileSet, file)
 	sortImports(opt.LocalPrefix, fileSet, file)

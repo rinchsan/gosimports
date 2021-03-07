@@ -111,14 +111,6 @@ func IsEnd(ev core.Event) bool {
 	return ev.Label(0).Key() == keys.End
 }
 
-// Detach returns a context without an associated span.
-// This allows the creation of spans that are not children of the current span.
-func Detach(ctx context.Context) context.Context {
-	return core.Export(ctx, core.MakeEvent([3]label.Label{
-		keys.Detach.New(),
-	}, nil))
-}
-
 // IsDetach returns true if the event was built by the Detach function.
 // It is intended to be used in exporters to identify the semantics of the
 // event when deciding what to do with it.

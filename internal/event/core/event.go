@@ -6,7 +6,6 @@
 package core
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/rinchsan/gosimports/internal/event/label"
@@ -29,17 +28,6 @@ type Event struct {
 }
 
 func (ev Event) At() time.Time { return ev.at }
-
-func (ev Event) Format(f fmt.State, r rune) {
-	if !ev.at.IsZero() {
-		fmt.Fprint(f, ev.at.Format("2006/01/02 15:04:05 "))
-	}
-	for index := 0; ev.Valid(index); index++ {
-		if l := ev.Label(index); l.Valid() {
-			fmt.Fprintf(f, "\n\t%v", l)
-		}
-	}
-}
 
 func (ev Event) Valid(index int) bool {
 	return index >= 0 && index < len(ev.static)+len(ev.dynamic)

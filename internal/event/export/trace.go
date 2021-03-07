@@ -6,7 +6,6 @@ package export
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/rinchsan/gosimports/internal/event"
@@ -85,10 +84,6 @@ func Spans(output event.Exporter) event.Exporter {
 	}
 }
 
-func (s *SpanContext) Format(f fmt.State, r rune) {
-	fmt.Fprintf(f, "%v:%v", s.TraceID, s.SpanID)
-}
-
 func (s *Span) Start() core.Event {
 	// start never changes after construction, so we dont need to hold the mutex
 	return s.start
@@ -104,14 +99,4 @@ func (s *Span) Events() []core.Event {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return s.events
-}
-
-func (s *Span) Format(f fmt.State, r rune) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	fmt.Fprintf(f, "%v %v", s.Name, s.ID)
-	if s.ParentID.IsValid() {
-		fmt.Fprintf(f, "[%v]", s.ParentID)
-	}
-	fmt.Fprintf(f, " %v->%v", s.start, s.finish)
 }

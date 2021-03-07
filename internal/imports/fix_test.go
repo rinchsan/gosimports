@@ -5,16 +5,13 @@
 package imports
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"go/build"
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"reflect"
 	"runtime"
-	"sort"
 	"strings"
 	"sync"
 	"testing"
@@ -2545,165 +2542,6 @@ func TestX() {
 			},
 		},
 	}.processTest(t, "foo.com/a", "a_test.go", nil, nil, want)
-}
-
-// TestGetCandidates tests that get packages finds packages
-// with correct priorities.
-func TestGetCandidates(t *testing.T) {
-	type res struct {
-		relevance  float64
-		name, path string
-	}
-	want := []res{
-		{0, "bytes", "bytes"},
-		{0, "http", "net/http"},
-		{0, "rand", "crypto/rand"},
-		{0, "bar", "bar.com/bar"},
-		{0, "foo", "foo.com/foo"},
-	}
-
-	testConfig{
-		modules: []packagestest.Module{
-			{
-				Name:  "bar.com",
-				Files: fm{"bar/bar.go": "package bar\n"},
-			},
-			{
-				Name:  "foo.com",
-				Files: fm{"foo/foo.go": "package foo\n"},
-			},
-		},
-	}.test(t, func(t *goimportTest) {
-		var mu sync.Mutex
-		var got []res
-		add := func(c ImportFix) {
-			mu.Lock()
-			defer mu.Unlock()
-			for _, w := range want {
-				if c.StmtInfo.ImportPath == w.path {
-					got = append(got, res{c.Relevance, c.IdentName, c.StmtInfo.ImportPath})
-				}
-			}
-		}
-		if err := GetAllCandidates(context.Background(), add, "", "x.go", "x", t.env); err != nil {
-			t.Fatalf("GetAllCandidates() = %v", err)
-		}
-		// Sort, then clear out relevance so it doesn't mess up the DeepEqual.
-		sort.Slice(got, func(i, j int) bool {
-			ri, rj := got[i], got[j]
-			if ri.relevance != rj.relevance {
-				return ri.relevance > rj.relevance // Highest first.
-			}
-			return ri.name < rj.name
-		})
-		for i := range got {
-			got[i].relevance = 0
-		}
-		if !reflect.DeepEqual(want, got) {
-			t.Errorf("wanted results in order %v, got %v", want, got)
-		}
-	})
-}
-
-func TestGetImportPaths(t *testing.T) {
-	type res struct {
-		relevance  float64
-		name, path string
-	}
-	want := []res{
-		{0, "http", "net/http"},
-		{0, "net", "net"},
-		{0, "neta", "neta.com/neta"},
-	}
-
-	testConfig{
-		modules: []packagestest.Module{
-			{
-				Name:  "neta.com",
-				Files: fm{"neta/neta.go": "package neta\n"},
-			},
-		},
-	}.test(t, func(t *goimportTest) {
-		var mu sync.Mutex
-		var got []res
-		add := func(c ImportFix) {
-			mu.Lock()
-			defer mu.Unlock()
-			for _, w := range want {
-				if c.StmtInfo.ImportPath == w.path {
-					got = append(got, res{c.Relevance, c.IdentName, c.StmtInfo.ImportPath})
-				}
-			}
-		}
-		if err := GetImportPaths(context.Background(), add, "ne", "x.go", "x", t.env); err != nil {
-			t.Fatalf("GetImportPaths() = %v", err)
-		}
-		// Sort, then clear out relevance so it doesn't mess up the DeepEqual.
-		sort.Slice(got, func(i, j int) bool {
-			ri, rj := got[i], got[j]
-			if ri.relevance != rj.relevance {
-				return ri.relevance > rj.relevance // Highest first.
-			}
-			return ri.name < rj.name
-		})
-		for i := range got {
-			got[i].relevance = 0
-		}
-		if !reflect.DeepEqual(want, got) {
-			t.Errorf("wanted results in order %v, got %v", want, got)
-		}
-	})
-}
-
-func TestGetPackageCompletions(t *testing.T) {
-	type res struct {
-		relevance          float64
-		name, path, symbol string
-	}
-	want := []res{
-		{0, "rand", "math/rand", "Seed"},
-		{0, "rand", "bar.com/rand", "Bar"},
-	}
-
-	testConfig{
-		modules: []packagestest.Module{
-			{
-				Name:  "bar.com",
-				Files: fm{"rand/bar.go": "package rand\nvar Bar int\n"},
-			},
-		},
-	}.test(t, func(t *goimportTest) {
-		var mu sync.Mutex
-		var got []res
-		add := func(c PackageExport) {
-			mu.Lock()
-			defer mu.Unlock()
-			for _, csym := range c.Exports {
-				for _, w := range want {
-					if c.Fix.StmtInfo.ImportPath == w.path && csym == w.symbol {
-						got = append(got, res{c.Fix.Relevance, c.Fix.IdentName, c.Fix.StmtInfo.ImportPath, csym})
-					}
-				}
-			}
-		}
-		if err := GetPackageExports(context.Background(), add, "rand", "x.go", "x", t.env); err != nil {
-			t.Fatalf("getPackageCompletions() = %v", err)
-		}
-		// Sort, then clear out relevance so it doesn't mess up the DeepEqual.
-		sort.Slice(got, func(i, j int) bool {
-			ri, rj := got[i], got[j]
-			if ri.relevance != rj.relevance {
-				return ri.relevance > rj.relevance // Highest first.
-			}
-			return ri.name < rj.name
-		})
-		for i := range got {
-			got[i].relevance = 0
-		}
-		if !reflect.DeepEqual(want, got) {
-			t.Errorf("wanted results in order %v, got %v", want, got)
-		}
-	})
 }
 
 // Tests #34895: process should not panic on concurrent calls.
