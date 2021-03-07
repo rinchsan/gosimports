@@ -29,7 +29,7 @@ For other editors, you probably know what to do.
 
 To exclude directories in your $GOPATH from being scanned for Go
 files, gosimports respects a configuration file at
-$GOPATH/src/.gosimportsignore which may contain blank lines, comment
+$GOPATH/src/.goimportsignore which may contain blank lines, comment
 lines (beginning with '#'), or lines naming a directory relative to
 the configuration file to ignore when scanning. No globbing or regex
 patterns are allowed. Use the "-v" verbose flag to verify it's
