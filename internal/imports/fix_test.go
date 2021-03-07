@@ -1361,11 +1361,11 @@ var (
 		module: packagestest.Module{
 			Name: "golang.org/fake",
 			Files: fm{
-				"target/f.go":            "package mypkg\nvar Foo = 123\n",
-				"x/y/mypkg":              packagestest.Symlink("../../target"), // valid symlink
-				"x/y/apkg":               packagestest.Symlink(".."),           // symlink loop
-				"myotherpkg/toformat.go": input,
-				"../../.goimportsignore": "golang.org/fake/x/y/mypkg\n",
+				"target/f.go":             "package mypkg\nvar Foo = 123\n",
+				"x/y/mypkg":               packagestest.Symlink("../../target"), // valid symlink
+				"x/y/apkg":                packagestest.Symlink(".."),           // symlink loop
+				"myotherpkg/toformat.go":  input,
+				"../../.gosimportsignore": "golang.org/fake/x/y/mypkg\n",
 			},
 		},
 	}.processTest(t, "golang.org/fake", "myotherpkg/toformat.go", nil, nil, want)
@@ -1958,7 +1958,7 @@ const _ = pkg.X
 		module: packagestest.Module{
 			Name: "foo.com",
 			Files: fm{
-				"../.goimportsignore":                              "# comment line\n\n foo.com/example", // tests comment, blank line, whitespace trimming
+				"../.gosimportsignore":                             "# comment line\n\n foo.com/example", // tests comment, blank line, whitespace trimming
 				"example/pkg/pkg.go":                               "package pkg\nconst X = 1",
 				"otherwise-longer-so-worse-example/foo/pkg/pkg.go": "package pkg\nconst X = 1",
 				"x/x.go": input,

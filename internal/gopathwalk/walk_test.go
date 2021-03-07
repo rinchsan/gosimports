@@ -97,13 +97,13 @@ func TestSkip(t *testing.T) {
 	defer os.RemoveAll(dir)
 
 	if err := mapToDir(dir, map[string]string{
-		"ignoreme/f.go":     "package ignoreme",     // ignored by .goimportsignore
+		"ignoreme/f.go":     "package ignoreme",     // ignored by .gosimportsignore
 		"node_modules/f.go": "package nodemodules;", // ignored by hardcoded node_modules filter
 		"v/f.go":            "package v;",           // ignored by hardcoded vgo cache rule
 		"mod/f.go":          "package mod;",         // ignored by hardcoded vgo cache rule
 		"shouldfind/f.go":   "package shouldfind;",  // not ignored
 
-		".goimportsignore": "ignoreme\n",
+		".gosimportsignore": "ignoreme\n",
 	}); err != nil {
 		t.Fatal(err)
 	}
