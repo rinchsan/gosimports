@@ -103,7 +103,7 @@ type walker struct {
 	skip func(Root, string) bool // The callback that will be invoked for every dir. dir is skipped if it returns true.
 	opts Options                 // Options passed to Walk by the user.
 
-	ignoredDirs []os.FileInfo // The ignored directories, loaded from .goimportsignore files.
+	ignoredDirs []os.FileInfo // The ignored directories, loaded from .gosimportsignore files.
 }
 
 // init initializes the walker based on its Options
@@ -130,11 +130,11 @@ func (w *walker) init() {
 	}
 }
 
-// getIgnoredDirs reads an optional config file at <path>/.goimportsignore
+// getIgnoredDirs reads an optional config file at <path>/.gosimportsignore
 // of relative directories to ignore when scanning for go files.
 // The provided path is one of the $GOPATH entries with "src" appended.
 func (w *walker) getIgnoredDirs(path string) []string {
-	file := filepath.Join(path, ".goimportsignore")
+	file := filepath.Join(path, ".gosimportsignore")
 	slurp, err := ioutil.ReadFile(file)
 	if w.opts.Logf != nil {
 		if err != nil {
