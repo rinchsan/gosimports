@@ -24,7 +24,7 @@ import (
 type Options struct {
 	// If Logf is non-nil, debug logging is enabled through this function.
 	Logf func(format string, args ...interface{})
-	// Search module caches. Also disables legacy goimports ignore rules.
+	// Search module caches. Also disables legacy gosimports ignore rules.
 	ModulesEnabled bool
 }
 

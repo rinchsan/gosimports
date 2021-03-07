@@ -118,7 +118,7 @@ import _ "rsc.io/QUOTE/QUOTE"
 	mt.assertFound("rsc.io/QUOTE/QUOTE", "QUOTE")
 }
 
-// Not obviously relevant to goimports. Adapted from mod_domain_root.txt anyway.
+// Not obviously relevant to gosimports. Adapted from mod_domain_root.txt anyway.
 func TestModDomainRoot(t *testing.T) {
 	mt := setup(t, `
 -- go.mod --

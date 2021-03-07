@@ -1403,7 +1403,7 @@ var (
 
 // Test for correctly identifying the name of a vendored package when it
 // differs from its directory name. In this test, the import line
-// "mypkg.com/mypkg_v1" would be removed if goimports wasn't able to detect
+// "mypkg.com/mypkg_v1" would be removed if gosimports wasn't able to detect
 // that the package name is "mypkg".
 func TestVendorPackage(t *testing.T) {
 	const input = `package p

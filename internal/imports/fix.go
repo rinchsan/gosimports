@@ -514,7 +514,7 @@ func (p *pass) addCandidate(imp *ImportInfo, pkg *packageInfo) {
 // fixImports adds and removes imports from f so that all its references are
 // satisfied and there are no unused imports.
 //
-// This is declared as a variable rather than a function so goimports can
+// This is declared as a variable rather than a function so gosimports can
 // easily be extended by adding a file with an init function.
 var fixImports = fixImportsDefault
 
@@ -989,7 +989,7 @@ func addStdlibCandidates(pass *pass, refs references) error {
 	return nil
 }
 
-// A Resolver does the build-system-specific parts of goimports.
+// A Resolver does the build-system-specific parts of gosimports.
 type Resolver interface {
 	// loadPackageNames loads the package names in importPaths.
 	loadPackageNames(importPaths []string, srcDir string) (map[string]string, error)
@@ -1617,7 +1617,7 @@ func pkgIsCandidate(filename string, refs references, pkg *pkg) bool {
 	// being package "cloudbilling", but doesn't
 	// permit a directory "foo" to be package
 	// "bar", which is strongly discouraged
-	// anyway. There's no reason goimports needs
+	// anyway. There's no reason gosimports needs
 	// to be slow just to accommodate that.
 	for pkgIdent := range refs {
 		lastTwo := lastTwoComponents(pkg.importPathShort)
