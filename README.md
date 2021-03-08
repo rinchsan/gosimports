@@ -2,6 +2,7 @@
 
 ![](https://github.com/rinchsan/gosimports/workflows/CI/badge.svg)
 ![](https://img.shields.io/github/release/rinchsan/gosimports.svg?colorB=7E7E7E)
+[![](https://pkg.go.dev/badge/github.com/rinchsan/gosimports.svg)](https://pkg.go.dev/github.com/rinchsan/gosimports/cmd/gosimports)
 
 - :rocket: Just replace `goimports` with `gosimports` !
 - :sparkles: Simpler than `goimports`

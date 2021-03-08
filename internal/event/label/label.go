@@ -52,17 +52,6 @@ type List interface {
 	Label(index int) Label
 }
 
-// list implements LabelList for a list of Labels.
-type list struct {
-	labels []Label
-}
-
-// filter wraps a LabelList filtering out specific labels.
-type filter struct {
-	keys       []Key
-	underlying List
-}
-
 // listMap implements LabelMap for a simple list of labels.
 type listMap struct {
 	labels []Label
@@ -138,28 +127,6 @@ func (t Label) Format(f fmt.State, r rune) {
 	t.Key().Format(f, buf[:0], t)
 }
 
-func (l *list) Valid(index int) bool {
-	return index >= 0 && index < len(l.labels)
-}
-
-func (l *list) Label(index int) Label {
-	return l.labels[index]
-}
-
-func (f *filter) Valid(index int) bool {
-	return f.underlying.Valid(index)
-}
-
-func (f *filter) Label(index int) Label {
-	l := f.underlying.Label(index)
-	for _, f := range f.keys {
-		if l.Key() == f {
-			return Label{}
-		}
-	}
-	return l
-}
-
 func (lm listMap) Find(key Key) Label {
 	for _, l := range lm.labels {
 		if l.Key() == key {
@@ -177,22 +144,6 @@ func (c mapChain) Find(key Key) Label {
 		}
 	}
 	return Label{}
-}
-
-var emptyList = &list{}
-
-func NewList(labels ...Label) List {
-	if len(labels) == 0 {
-		return emptyList
-	}
-	return &list{labels: labels}
-}
-
-func Filter(l List, keys ...Key) List {
-	if len(keys) == 0 {
-		return l
-	}
-	return &filter{keys: keys, underlying: l}
 }
 
 func NewMap(labels ...Label) Map {

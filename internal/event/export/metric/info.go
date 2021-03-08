@@ -43,44 +43,12 @@ type HistogramFloat64 struct {
 	Buckets []float64
 }
 
-// Count creates a new metric based on the Scalar information that counts
-// the number of times the supplied int64 measure is set.
-// Metrics of this type will use Int64Data.
-func (info Scalar) Count(e *Config, key label.Key) {
-	data := &Int64Data{Info: &info, key: nil}
-	e.subscribe(key, data.count)
-}
-
 // SumInt64 creates a new metric based on the Scalar information that sums all
 // the values recorded on the int64 measure.
 // Metrics of this type will use Int64Data.
 func (info Scalar) SumInt64(e *Config, key *keys.Int64) {
 	data := &Int64Data{Info: &info, key: key}
 	e.subscribe(key, data.sum)
-}
-
-// LatestInt64 creates a new metric based on the Scalar information that tracks
-// the most recent value recorded on the int64 measure.
-// Metrics of this type will use Int64Data.
-func (info Scalar) LatestInt64(e *Config, key *keys.Int64) {
-	data := &Int64Data{Info: &info, IsGauge: true, key: key}
-	e.subscribe(key, data.latest)
-}
-
-// SumFloat64 creates a new metric based on the Scalar information that sums all
-// the values recorded on the float64 measure.
-// Metrics of this type will use Float64Data.
-func (info Scalar) SumFloat64(e *Config, key *keys.Float64) {
-	data := &Float64Data{Info: &info, key: key}
-	e.subscribe(key, data.sum)
-}
-
-// LatestFloat64 creates a new metric based on the Scalar information that tracks
-// the most recent value recorded on the float64 measure.
-// Metrics of this type will use Float64Data.
-func (info Scalar) LatestFloat64(e *Config, key *keys.Float64) {
-	data := &Float64Data{Info: &info, IsGauge: true, key: key}
-	e.subscribe(key, data.latest)
 }
 
 // Record creates a new metric based on the HistogramInt64 information that

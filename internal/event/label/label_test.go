@@ -23,108 +23,6 @@ var (
 	all  = []label.Label{A, B, C}
 )
 
-func TestList(t *testing.T) {
-	for _, test := range []struct {
-		name   string
-		labels []label.Label
-		expect string
-	}{{
-		name: "empty",
-	}, {
-		name:   "single",
-		labels: []label.Label{A},
-		expect: `A="a"`,
-	}, {
-		name:   "invalid",
-		labels: []label.Label{{}},
-		expect: ``,
-	}, {
-		name:   "two",
-		labels: []label.Label{A, B},
-		expect: `A="a", B="b"`,
-	}, {
-		name:   "three",
-		labels: []label.Label{A, B, C},
-		expect: `A="a", B="b", C="c"`,
-	}, {
-		name:   "missing A",
-		labels: []label.Label{{}, B, C},
-		expect: `B="b", C="c"`,
-	}, {
-		name:   "missing B",
-		labels: []label.Label{A, {}, C},
-		expect: `A="a", C="c"`,
-	}, {
-		name:   "missing C",
-		labels: []label.Label{A, B, {}},
-		expect: `A="a", B="b"`,
-	}, {
-		name:   "missing AB",
-		labels: []label.Label{{}, {}, C},
-		expect: `C="c"`,
-	}, {
-		name:   "missing AC",
-		labels: []label.Label{{}, B, {}},
-		expect: `B="b"`,
-	}, {
-		name:   "missing BC",
-		labels: []label.Label{A, {}, {}},
-		expect: `A="a"`,
-	}} {
-		t.Run(test.name, func(t *testing.T) {
-			got := printList(label.NewList(test.labels...))
-			if got != test.expect {
-				t.Errorf("got %q want %q", got, test.expect)
-			}
-		})
-	}
-}
-
-func TestFilter(t *testing.T) {
-	for _, test := range []struct {
-		name    string
-		labels  []label.Label
-		filters []label.Key
-		expect  string
-	}{{
-		name:   "no filters",
-		labels: all,
-		expect: `A="a", B="b", C="c"`,
-	}, {
-		name:    "no labels",
-		filters: []label.Key{AKey},
-		expect:  ``,
-	}, {
-		name:    "filter A",
-		labels:  all,
-		filters: []label.Key{AKey},
-		expect:  `B="b", C="c"`,
-	}, {
-		name:    "filter B",
-		labels:  all,
-		filters: []label.Key{BKey},
-		expect:  `A="a", C="c"`,
-	}, {
-		name:    "filter C",
-		labels:  all,
-		filters: []label.Key{CKey},
-		expect:  `A="a", B="b"`,
-	}, {
-		name:    "filter AC",
-		labels:  all,
-		filters: []label.Key{AKey, CKey},
-		expect:  `B="b"`,
-	}} {
-		t.Run(test.name, func(t *testing.T) {
-			labels := label.NewList(test.labels...)
-			got := printList(label.Filter(labels, test.filters...))
-			if got != test.expect {
-				t.Errorf("got %q want %q", got, test.expect)
-			}
-		})
-	}
-}
-
 func TestMap(t *testing.T) {
 	for _, test := range []struct {
 		name   string
@@ -240,21 +138,6 @@ func TestMapMerge(t *testing.T) {
 			}
 		})
 	}
-}
-
-func printList(list label.List) string {
-	buf := &bytes.Buffer{}
-	for index := 0; list.Valid(index); index++ {
-		l := list.Label(index)
-		if !l.Valid() {
-			continue
-		}
-		if buf.Len() > 0 {
-			buf.WriteString(", ")
-		}
-		fmt.Fprint(buf, l)
-	}
-	return buf.String()
 }
 
 func printMap(lm label.Map, keys []label.Key) string {

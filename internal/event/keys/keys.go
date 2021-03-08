@@ -88,14 +88,6 @@ func (k *Int) Format(w io.Writer, buf []byte, l label.Label) {
 // Of creates a new Label with this key and the supplied value.
 func (k *Int) Of(v int) label.Label { return label.Of64(k, uint64(v)) }
 
-// Get can be used to get a label for the key from a label.Map.
-func (k *Int) Get(lm label.Map) int {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
-
 // From can be used to get a value from a Label.
 func (k *Int) From(t label.Label) int { return int(t.Unpack64()) }
 
@@ -119,14 +111,6 @@ func (k *Int8) Format(w io.Writer, buf []byte, l label.Label) {
 
 // Of creates a new Label with this key and the supplied value.
 func (k *Int8) Of(v int8) label.Label { return label.Of64(k, uint64(v)) }
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *Int8) Get(lm label.Map) int8 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
 
 // From can be used to get a value from a Label.
 func (k *Int8) From(t label.Label) int8 { return int8(t.Unpack64()) }
@@ -152,14 +136,6 @@ func (k *Int16) Format(w io.Writer, buf []byte, l label.Label) {
 // Of creates a new Label with this key and the supplied value.
 func (k *Int16) Of(v int16) label.Label { return label.Of64(k, uint64(v)) }
 
-// Get can be used to get a label for the key from a label.Map.
-func (k *Int16) Get(lm label.Map) int16 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
-
 // From can be used to get a value from a Label.
 func (k *Int16) From(t label.Label) int16 { return int16(t.Unpack64()) }
 
@@ -183,14 +159,6 @@ func (k *Int32) Format(w io.Writer, buf []byte, l label.Label) {
 
 // Of creates a new Label with this key and the supplied value.
 func (k *Int32) Of(v int32) label.Label { return label.Of64(k, uint64(v)) }
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *Int32) Get(lm label.Map) int32 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
 
 // From can be used to get a value from a Label.
 func (k *Int32) From(t label.Label) int32 { return int32(t.Unpack64()) }
@@ -216,14 +184,6 @@ func (k *Int64) Format(w io.Writer, buf []byte, l label.Label) {
 // Of creates a new Label with this key and the supplied value.
 func (k *Int64) Of(v int64) label.Label { return label.Of64(k, uint64(v)) }
 
-// Get can be used to get a label for the key from a label.Map.
-func (k *Int64) Get(lm label.Map) int64 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
-
 // From can be used to get a value from a Label.
 func (k *Int64) From(t label.Label) int64 { return int64(t.Unpack64()) }
 
@@ -247,14 +207,6 @@ func (k *UInt) Format(w io.Writer, buf []byte, l label.Label) {
 
 // Of creates a new Label with this key and the supplied value.
 func (k *UInt) Of(v uint) label.Label { return label.Of64(k, uint64(v)) }
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *UInt) Get(lm label.Map) uint {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
 
 // From can be used to get a value from a Label.
 func (k *UInt) From(t label.Label) uint { return uint(t.Unpack64()) }
@@ -280,14 +232,6 @@ func (k *UInt8) Format(w io.Writer, buf []byte, l label.Label) {
 // Of creates a new Label with this key and the supplied value.
 func (k *UInt8) Of(v uint8) label.Label { return label.Of64(k, uint64(v)) }
 
-// Get can be used to get a label for the key from a label.Map.
-func (k *UInt8) Get(lm label.Map) uint8 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
-
 // From can be used to get a value from a Label.
 func (k *UInt8) From(t label.Label) uint8 { return uint8(t.Unpack64()) }
 
@@ -311,14 +255,6 @@ func (k *UInt16) Format(w io.Writer, buf []byte, l label.Label) {
 
 // Of creates a new Label with this key and the supplied value.
 func (k *UInt16) Of(v uint16) label.Label { return label.Of64(k, uint64(v)) }
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *UInt16) Get(lm label.Map) uint16 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
 
 // From can be used to get a value from a Label.
 func (k *UInt16) From(t label.Label) uint16 { return uint16(t.Unpack64()) }
@@ -344,14 +280,6 @@ func (k *UInt32) Format(w io.Writer, buf []byte, l label.Label) {
 // Of creates a new Label with this key and the supplied value.
 func (k *UInt32) Of(v uint32) label.Label { return label.Of64(k, uint64(v)) }
 
-// Get can be used to get a label for the key from a label.Map.
-func (k *UInt32) Get(lm label.Map) uint32 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
-
 // From can be used to get a value from a Label.
 func (k *UInt32) From(t label.Label) uint32 { return uint32(t.Unpack64()) }
 
@@ -375,14 +303,6 @@ func (k *UInt64) Format(w io.Writer, buf []byte, l label.Label) {
 
 // Of creates a new Label with this key and the supplied value.
 func (k *UInt64) Of(v uint64) label.Label { return label.Of64(k, v) }
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *UInt64) Get(lm label.Map) uint64 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
-}
 
 // From can be used to get a value from a Label.
 func (k *UInt64) From(t label.Label) uint64 { return t.Unpack64() }
@@ -408,14 +328,6 @@ func (k *Float32) Format(w io.Writer, buf []byte, l label.Label) {
 // Of creates a new Label with this key and the supplied value.
 func (k *Float32) Of(v float32) label.Label {
 	return label.Of64(k, uint64(math.Float32bits(v)))
-}
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *Float32) Get(lm label.Map) float32 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
 }
 
 // From can be used to get a value from a Label.
@@ -444,14 +356,6 @@ func (k *Float64) Format(w io.Writer, buf []byte, l label.Label) {
 // Of creates a new Label with this key and the supplied value.
 func (k *Float64) Of(v float64) label.Label {
 	return label.Of64(k, math.Float64bits(v))
-}
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *Float64) Get(lm label.Map) float64 {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return 0
 }
 
 // From can be used to get a value from a Label.
@@ -515,14 +419,6 @@ func (k *Boolean) Of(v bool) label.Label {
 		return label.Of64(k, 1)
 	}
 	return label.Of64(k, 0)
-}
-
-// Get can be used to get a label for the key from a label.Map.
-func (k *Boolean) Get(lm label.Map) bool {
-	if t := lm.Find(k); t.Valid() {
-		return k.From(t)
-	}
-	return false
 }
 
 // From can be used to get a value from a Label.

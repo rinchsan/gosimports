@@ -22,7 +22,7 @@ func TestShouldTraverse(t *testing.T) {
 		t.Skipf("skipping symlink-requiring test on %s", runtime.GOOS)
 	}
 
-	dir, err := ioutil.TempDir("", "goimports-")
+	dir, err := ioutil.TempDir("", "gosimports-")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -88,9 +88,9 @@ func TestShouldTraverse(t *testing.T) {
 	}
 }
 
-// TestSkip tests that various goimports rules are followed in non-modules mode.
+// TestSkip tests that various gosimports rules are followed in non-modules mode.
 func TestSkip(t *testing.T) {
-	dir, err := ioutil.TempDir("", "goimports-")
+	dir, err := ioutil.TempDir("", "gosimports-")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -125,7 +125,7 @@ func TestSkip(t *testing.T) {
 
 // TestSkipFunction tests that scan successfully skips directories from user callback.
 func TestSkipFunction(t *testing.T) {
-	dir, err := ioutil.TempDir("", "goimports-")
+	dir, err := ioutil.TempDir("", "gosimports-")
 	if err != nil {
 		t.Fatal(err)
 	}

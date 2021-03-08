@@ -54,6 +54,14 @@ func TestDirectoryPackageInfoReachedStatus(t *testing.T) {
 }
 
 func TestModCacheInfo(t *testing.T) {
+	keys := func(d *dirInfoCache) (keys []string) {
+		d.mu.Lock()
+		defer d.mu.Unlock()
+		for key := range d.dirs {
+			keys = append(keys, key)
+		}
+		return keys
+	}
 	m := &dirInfoCache{
 		dirs: make(map[string]*directoryPackageInfo),
 	}
@@ -107,7 +115,7 @@ func TestModCacheInfo(t *testing.T) {
 	}
 	sort.Strings(wantKeys)
 
-	gotKeys := m.Keys()
+	gotKeys := keys(m)
 	sort.Strings(gotKeys)
 
 	if len(gotKeys) != len(wantKeys) {

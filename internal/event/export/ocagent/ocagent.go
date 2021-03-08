@@ -42,15 +42,6 @@ var (
 	exporters = make(map[Config]*Exporter)
 )
 
-// Discover finds the local agent to export to, it will return nil if there
-// is not one running.
-// TODO: Actually implement a discovery protocol rather than a hard coded address
-func Discover() *Config {
-	return &Config{
-		Address: "http://localhost:55678",
-	}
-}
-
 type Exporter struct {
 	mu      sync.Mutex
 	config  Config

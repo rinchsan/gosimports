@@ -72,12 +72,6 @@ type MessageEvent struct {
 
 type MessageEventType int32
 
-const (
-	UnspecifiedMessageEvent MessageEventType = iota
-	SentMessageEvent
-	ReceivedMessageEvent
-)
-
 type TimeEventValue interface {
 	labelTimeEventValue()
 }
@@ -99,12 +93,6 @@ type Link struct {
 }
 
 type LinkType int32
-
-const (
-	UnspecifiedLinkType LinkType = 0
-	ChildLinkType       LinkType = 1
-	ParentLinkType      LinkType = 2
-)
 
 type Status struct {
 	Code    int32  `json:"code,omitempty"`

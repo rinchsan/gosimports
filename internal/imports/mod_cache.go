@@ -186,16 +186,6 @@ func (d *dirInfoCache) Load(dir string) (directoryPackageInfo, bool) {
 	return *info, true
 }
 
-// Keys returns the keys currently present in d.
-func (d *dirInfoCache) Keys() (keys []string) {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	for key := range d.dirs {
-		keys = append(keys, key)
-	}
-	return keys
-}
-
 func (d *dirInfoCache) CachePackageName(info directoryPackageInfo) (string, error) {
 	if loaded, err := info.reachedStatus(nameLoaded); loaded {
 		return info.packageName, err

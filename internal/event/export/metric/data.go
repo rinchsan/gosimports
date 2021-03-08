@@ -53,7 +53,6 @@ type Float64Data struct {
 	EndTime time.Time
 
 	groups [][]label.Label
-	key    *keys.Float64
 }
 
 // HistogramInt64Data is a concrete implementation of Data for int64 histogram metrics.
@@ -163,55 +162,14 @@ func (data *Int64Data) modify(at time.Time, lm label.Map, f func(v int64) int64)
 	return &frozen
 }
 
-func (data *Int64Data) count(at time.Time, lm label.Map, l label.Label) Data {
-	return data.modify(at, lm, func(v int64) int64 {
-		return v + 1
-	})
-}
-
 func (data *Int64Data) sum(at time.Time, lm label.Map, l label.Label) Data {
 	return data.modify(at, lm, func(v int64) int64 {
 		return v + data.key.From(l)
 	})
 }
 
-func (data *Int64Data) latest(at time.Time, lm label.Map, l label.Label) Data {
-	return data.modify(at, lm, func(v int64) int64 {
-		return data.key.From(l)
-	})
-}
-
 func (data *Float64Data) Handle() string          { return data.Info.Name }
 func (data *Float64Data) Groups() [][]label.Label { return data.groups }
-
-func (data *Float64Data) modify(at time.Time, lm label.Map, f func(v float64) float64) Data {
-	index, insert := getGroup(lm, &data.groups, data.Info.Keys)
-	old := data.Rows
-	if insert {
-		data.Rows = make([]float64, len(old)+1)
-		copy(data.Rows, old[:index])
-		copy(data.Rows[index+1:], old[index:])
-	} else {
-		data.Rows = make([]float64, len(old))
-		copy(data.Rows, old)
-	}
-	data.Rows[index] = f(data.Rows[index])
-	data.EndTime = at
-	frozen := *data
-	return &frozen
-}
-
-func (data *Float64Data) sum(at time.Time, lm label.Map, l label.Label) Data {
-	return data.modify(at, lm, func(v float64) float64 {
-		return v + data.key.From(l)
-	})
-}
-
-func (data *Float64Data) latest(at time.Time, lm label.Map, l label.Label) Data {
-	return data.modify(at, lm, func(v float64) float64 {
-		return data.key.From(l)
-	})
-}
 
 func (data *HistogramInt64Data) Handle() string          { return data.Info.Name }
 func (data *HistogramInt64Data) Groups() [][]label.Label { return data.groups }

@@ -490,14 +490,6 @@ func (r *ModuleResolver) scan(ctx context.Context, callback *scanCallback) error
 	return nil
 }
 
-func (r *ModuleResolver) scoreImportPath(ctx context.Context, path string) float64 {
-	if _, ok := stdlib[path]; ok {
-		return MaxRelevance
-	}
-	mod, _ := r.findPackage(path)
-	return modRelevance(mod)
-}
-
 func modRelevance(mod *gocommand.ModuleJSON) float64 {
 	var relevance float64
 	switch {
