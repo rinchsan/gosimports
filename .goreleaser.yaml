@@ -1,4 +1,6 @@
 project_name: gosimports
+changelog:
+  skip: true
 builds:
   - id: gosimports
     main: ./cmd/gosimports/
