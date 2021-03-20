@@ -1,7 +1,7 @@
 project_name: gosimports
 builds:
   - id: gosimports
-    main: ./cmd/gosimports/gosimports.go
+    main: ./cmd/gosimports/
     env:
       - CGO_ENABLED=0
     goos:
