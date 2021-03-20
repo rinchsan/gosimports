@@ -12,7 +12,7 @@
 ## Installation
 
 ```bash
-go get github.com/rinchsan/gosimports/cmd/gosimports
+go install github.com/rinchsan/gosimports/cmd/gosimports@latest
 ```
 
 ## Example
