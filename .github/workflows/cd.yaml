@@ -1,15 +1,28 @@
-name: Release
+name: CD
 
 on:
   push:
+    branches:
+      - master
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
+
+  draft:
+    name: Draft
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/')
+    steps:
+      - name: Draft Release
+        uses: release-drafter/release-drafter@v5.15.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     name: Release
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
