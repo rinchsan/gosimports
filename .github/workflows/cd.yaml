@@ -1,7 +1,6 @@
 name: CD
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -23,7 +22,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: github.ref != 'ref/heads/master'
+    if: startWith(github.ref, 'ref/tags/')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
