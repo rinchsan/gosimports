@@ -1,0 +1,13 @@
+project_name: gosimports
+builds:
+  - id: gosimports
+    main: ./cmd/gosimports/gosimports.go
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
