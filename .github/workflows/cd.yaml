@@ -1,15 +1,29 @@
 name: CD
 
 on:
+  workflow_dispatch:
   push:
+    branches:
+      - master
     tags:
       - v*
 
 jobs:
 
+  draft:
+    name: Draft
+    runs-on: ubuntu-latest
+    if: github.ref == 'ref/heads/master'
+    steps:
+      - name: Draft Release
+        uses: release-drafter/release-drafter@v5.15.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   release:
     name: Release
     runs-on: ubuntu-latest
+    if: github.ref != 'ref/heads/master'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
