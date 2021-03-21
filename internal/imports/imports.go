@@ -281,6 +281,11 @@ func separateImportsIntoGroups(r io.Reader, impsByGroup map[int][]*ast.ImportSpe
 						fmt.Fprint(&out, imp.Name.Name, " ")
 					}
 					fmt.Fprint(&out, imp.Path.Value)
+					if imp.Comment != nil {
+						for _, comment := range imp.Comment.List {
+							fmt.Fprint(&out, " ", comment.Text)
+						}
+					}
 					out.WriteByte('\n')
 				}
 				out.WriteByte('\n')
