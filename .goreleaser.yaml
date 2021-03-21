@@ -13,3 +13,19 @@ builds:
     goarch:
       - amd64
       - arm64
+brews:
+  - name: gosimports
+    tap:
+      owner: rinchsan
+      name: homebrew-tap
+    url_template: "https://github.com/rinchsan/gosimports/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    commit_author:
+      name: goreleaserbot
+      email: goreleaser@carlosbecker.com
+    folder: Formula
+    homepage: "https://pkg.go.dev/github.com/rinchsan/gosimports/cmd/gosimports"
+    description: Command gosimports updates your Go import lines, adding missing ones, removing unreferenced ones, and removing redundant blank lines.
+    test: |
+      system "#{bin}/gosimports --help"
+    install: |
+      bin.install "gosimports"
