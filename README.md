@@ -11,9 +11,27 @@
 
 ## Installation
 
+### Go 1.16 or later
+
 ```bash
 go install github.com/rinchsan/gosimports/cmd/gosimports@latest
 ```
+
+### Go 1.15 or earlier
+
+```bash
+go get github.com/rinchsan/gosimports/cmd/gosimports
+```
+
+### Homebrew
+
+```bash
+brew install rinchsan/tap/gosimports
+```
+
+### Binary
+
+Download binaries from [GitHub Releases](https://github.com/rinchsan/gosimports/releases)
 
 ## Example
 
