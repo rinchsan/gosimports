@@ -39,16 +39,20 @@ Download binaries from [GitHub Releases](https://github.com/rinchsan/gosimports/
 import (
 	"bufio"
 
-	// comment
+	// basic comments
 
-	"golang.org/x/tools/internal/imports"
+	/*
+		block comments
+	*/
+
+	"github.com/rinchsan/gosimports/internal/imports"
 
 	"errors"
-	gocmd "golang.org/x/tools/internal/gocommand"
+	gocmd "github.com/rinchsan/gosimports/internal/gocommand"
 	"flag"
 
-	"runtime" // comment
-	_ "runtime/pprof"
+	"runtime"
+	_ "runtime/pprof" // trailing inline comments
 	"strings"
 
 )
@@ -62,11 +66,11 @@ import (
 	"errors"
 	"flag"
 	"runtime"
-	_ "runtime/pprof"
+	_ "runtime/pprof" // trailing inline comments
 	"strings"
 
-	gocmd "golang.org/x/tools/internal/gocommand"
-	"golang.org/x/tools/internal/imports"
+	gocmd "github.com/rinchsan/gosimports/internal/gocommand"
+	"github.com/rinchsan/gosimports/internal/imports"
 )
 ```
 
@@ -76,17 +80,21 @@ while `goimports` formatting like below :-1:
 import (
 	"bufio"
 
-	// comment
+	// basic comments
 
-	"golang.org/x/tools/internal/imports"
+	/*
+		block comments
+	*/
+
+	"github.com/rinchsan/gosimports/internal/imports"
 
 	"errors"
 	"flag"
 
-	gocmd "golang.org/x/tools/internal/gocommand"
+	gocmd "github.com/rinchsan/gosimports/internal/gocommand"
 
-	"runtime" // comment
-	_ "runtime/pprof"
+	"runtime"
+	_ "runtime/pprof" // trailing inline comments
 	"strings"
 )
 ```

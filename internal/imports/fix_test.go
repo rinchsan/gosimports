@@ -661,10 +661,10 @@ func main() { _, _ = fmt.Print, ast.Walk }
 		out: `package main
 
 import (
-	"fmt"
-	"go/ast"
+	"fmt"    // A
+	"go/ast" // B
 
-	_ "manypackages.com/packagec"
+	_ "manypackages.com/packagec" // C
 )
 
 func main() { _, _ = fmt.Print, ast.Walk }
@@ -935,7 +935,7 @@ func main() {
 
 import (
 	"fmt"
-	"math"
+	"math" // fun
 	"strings"
 )
 
@@ -965,7 +965,7 @@ func main() {
 import (
 	_ "io"
 	_ "net/http"
-	_ "net/http/pprof"
+	_ "net/http/pprof" // install the pprof http handlers
 	_ "strings"
 )
 
@@ -993,7 +993,7 @@ func main() {
 import (
 	_ "io"
 	_ "net/http"
-	_ "net/http/pprof"
+	_ "net/http/pprof" // install the pprof http handlers
 	_ "strings"
 )
 
@@ -1032,7 +1032,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	_ "net/http/pprof"
+	_ "net/http/pprof" // install the pprof http handlers
 	"strings"
 
 	"manypackages.com/packagea"
