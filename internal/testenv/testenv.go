@@ -182,8 +182,9 @@ func NeedsTool(t Testing, tool string) {
 // It should be called from within a TestMain function.
 func ExitIfSmallMachine() {
 	switch os.Getenv("GO_BUILDER_NAME") {
-	case "linux-arm":
-		fmt.Fprintln(os.Stderr, "skipping test: linux-arm builder lacks sufficient memory (https://golang.org/issue/32834)")
+	case "linux-arm-scaleway":
+		// "linux-arm" was renamed to "linux-arm-scaleway" in CL 303230.
+		fmt.Fprintln(os.Stderr, "skipping test: linux-arm-scaleway builder lacks sufficient memory (https://golang.org/issue/32834)")
 		os.Exit(0)
 	case "plan9-arm":
 		fmt.Fprintln(os.Stderr, "skipping test: plan9-arm builder lacks sufficient memory (https://golang.org/issue/38772)")
