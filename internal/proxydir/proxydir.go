@@ -16,7 +16,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"golang.org/x/tools/internal/testenv"
+	"github.com/rinchsan/gosimports/internal/testenv"
 )
 
 // WriteModuleVersion creates a directory in the proxy dir for a module.
