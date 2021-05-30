@@ -65,10 +65,6 @@ func formatFile(fileSet *token.FileSet, file *ast.File, src []byte, adjust func(
 	imps := astutil.Imports(fileSet, file)
 	impsByGroup := make(map[int][]*ast.ImportSpec)
 	for _, impSection := range imps {
-		// Within each block of contiguous imports, see if any
-		// import lines are in different group numbers. If so,
-		// we'll need to put a space between them so it's
-		// compatible with gofmt.
 		for _, importSpec := range impSection {
 			importPath, _ := strconv.Unquote(importSpec.Path.Value)
 			groupNum := importGroup(opt.LocalPrefix, importPath)
@@ -255,6 +251,7 @@ func matchSpace(orig []byte, src []byte) []byte {
 	return b.Bytes()
 }
 
+// separateImportsIntoGroups separates import lines into groups determined by importGroup func.
 func separateImportsIntoGroups(r io.Reader, impsByGroup map[int][]*ast.ImportSpec) ([]byte, error) {
 	var out bytes.Buffer
 	in := bufio.NewReader(r)
