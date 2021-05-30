@@ -7,7 +7,9 @@ package label_test
 import (
 	"bytes"
 	"fmt"
+	"runtime"
 	"testing"
+	"unsafe"
 
 	"github.com/rinchsan/gosimports/internal/event/keys"
 	"github.com/rinchsan/gosimports/internal/event/label"
@@ -149,4 +151,18 @@ func printMap(lm label.Map, keys []label.Key) string {
 		fmt.Fprint(buf, lm.Find(key))
 	}
 	return buf.String()
+}
+
+func TestAttemptedStringCorruption(t *testing.T) {
+	defer func() {
+		r := recover()
+		if _, ok := r.(*runtime.TypeAssertionError); !ok {
+			t.Fatalf("wanted to recover TypeAssertionError, got %T", r)
+		}
+	}()
+
+	var x uint64 = 12390
+	p := unsafe.Pointer(&x)
+	l := label.OfValue(AKey, p)
+	_ = l.UnpackString()
 }
