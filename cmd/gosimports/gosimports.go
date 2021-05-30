@@ -11,7 +11,6 @@ import (
 	"flag"
 	"fmt"
 	"go/scanner"
-	exec "golang.org/x/sys/execabs"
 	"io"
 	"io/ioutil"
 	"log"
@@ -23,6 +22,7 @@ import (
 
 	"github.com/rinchsan/gosimports/internal/gocommand"
 	"github.com/rinchsan/gosimports/internal/imports"
+	exec "golang.org/x/sys/execabs"
 )
 
 var (
