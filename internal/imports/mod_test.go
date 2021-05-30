@@ -22,8 +22,6 @@ import (
 	"github.com/rinchsan/gosimports/internal/proxydir"
 	"github.com/rinchsan/gosimports/internal/testenv"
 	"golang.org/x/mod/module"
-
-
 	"golang.org/x/tools/txtar"
 )
 
