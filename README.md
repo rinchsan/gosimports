@@ -5,7 +5,7 @@
 [![](https://pkg.go.dev/badge/github.com/rinchsan/gosimports.svg)](https://pkg.go.dev/github.com/rinchsan/gosimports/cmd/gosimports)
 
 - :rocket: Drop-in replacement for `goimports`
-- :100: More consistent than `goimports`
+- :100: Prettier than `goimports`
 - :hammer: Originally forked from `golang.org/x/tools/cmd/goimports`
 
 ## Motivation
