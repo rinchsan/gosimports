@@ -1,4 +1,4 @@
-**CLI interface (such as options) is likely to change a few times before we reach 1.0.0**
+**Note: CLI interface (such as options) is likely to change a few times before we reach 1.0.0**
 
 # gosimports - simpler goimports
 
