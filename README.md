@@ -1,3 +1,5 @@
+**CLI interface (such as options) is likely to change a few times before we reach 1.0.0**
+
 # gosimports - simpler goimports
 
 ![](https://github.com/rinchsan/gosimports/workflows/CI/badge.svg)
