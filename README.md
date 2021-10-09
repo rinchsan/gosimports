@@ -16,16 +16,10 @@ This `gosimports` provides one solution to the [goimports grouping/ordering prob
 
 ## Installation
 
-### Go 1.16 or later
+### Go
 
 ```bash
 go install github.com/rinchsan/gosimports/cmd/gosimports@latest
-```
-
-### Go 1.15 or earlier
-
-```bash
-go get github.com/rinchsan/gosimports/cmd/gosimports
 ```
 
 ### Homebrew
