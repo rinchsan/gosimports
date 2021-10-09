@@ -8,7 +8,7 @@ Command gosimports updates your Go import lines,
 adding missing ones, removing unreferenced ones,
 and removing redundant blank lines.
 
-     $ go get github.com/rinchsan/gosimports/cmd/gosimports
+     $ go install github.com/rinchsan/gosimports/cmd/gosimports@latest
 
 In addition to fixing imports, gosimports also formats
 your code in the same style as gofmt so it can be used
