@@ -12,7 +12,9 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 	"sync"
 	"testing"
@@ -27,7 +29,7 @@ import (
 
 // Tests that we can find packages in the stdlib.
 func TestScanStdlib(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 `, "")
@@ -40,7 +42,7 @@ module x
 // where the module is in scope -- here we have to figure out the import path
 // without any help from go list.
 func TestScanOutOfScopeNestedModule(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -66,7 +68,7 @@ package x`, "")
 // Tests that we don't find a nested module contained in a local replace target.
 // The code for this case is too annoying to write, so it's just ignored.
 func TestScanNestedModuleInLocalReplace(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -105,7 +107,7 @@ package z
 
 // Tests that path encoding is handled correctly. Adapted from mod_case.txt.
 func TestModCase(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -122,7 +124,7 @@ import _ "rsc.io/QUOTE/QUOTE"
 
 // Not obviously relevant to gosimports. Adapted from mod_domain_root.txt anyway.
 func TestModDomainRoot(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -138,7 +140,7 @@ import _ "example.com"
 
 // Tests that scanning the module cache > 1 time is able to find the same module.
 func TestModMultipleScans(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -157,7 +159,7 @@ import _ "example.com"
 // Tests that scanning the module cache > 1 time is able to find the same module
 // in the module cache.
 func TestModMultipleScansWithSubdirs(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -176,7 +178,7 @@ import _ "rsc.io/quote"
 // Tests that scanning the module cache > 1 after changing a package in module cache to make it unimportable
 // is able to find the same module.
 func TestModCacheEditModFile(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -217,7 +219,7 @@ import _ "rsc.io/quote"
 
 // Tests that -mod=vendor works. Adapted from mod_vendor_build.txt.
 func TestModVendorBuild(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module m
 go 1.12
@@ -248,7 +250,7 @@ import _ "rsc.io/sampler"
 // Tests that -mod=vendor is auto-enabled only for go1.14 and higher.
 // Vaguely inspired by mod_vendor_auto.txt.
 func TestModVendorAuto(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module m
 go 1.14
@@ -274,7 +276,7 @@ import _ "rsc.io/sampler"
 // Tests that a module replace works. Adapted from mod_list.txt. We start with
 // go.mod2; the first part of the test is irrelevant.
 func TestModList(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 require rsc.io/quote v1.5.1
@@ -291,7 +293,7 @@ import _ "rsc.io/quote"
 
 // Tests that a local replace works. Adapted from mod_local_replace.txt.
 func TestModLocalReplace(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- x/y/go.mod --
 module x/y
 require zz v1.0.0
@@ -315,7 +317,7 @@ package z
 // Tests that the package at the root of the main module can be found.
 // Adapted from the first part of mod_multirepo.txt.
 func TestModMultirepo1(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module rsc.io/quote
 
@@ -331,7 +333,7 @@ package quote
 // of mod_multirepo.txt (We skip the case where it doesn't have a go.mod
 // entry -- we just don't work in that case.)
 func TestModMultirepo3(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module rsc.io/quote
 
@@ -350,7 +352,7 @@ import _ "rsc.io/quote/v2"
 // Tests that a nested module is found in the module cache, even though
 // it's checked out. Adapted from the fourth part of mod_multirepo.txt.
 func TestModMultirepo4(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module rsc.io/quote
 require rsc.io/quote/v2 v2.0.1
@@ -374,7 +376,7 @@ import _ "rsc.io/quote/v2"
 
 // Tests a simple module dependency. Adapted from the first part of mod_replace.txt.
 func TestModReplace1(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module quoter
 
@@ -390,7 +392,7 @@ package main
 
 // Tests a local replace. Adapted from the second part of mod_replace.txt.
 func TestModReplace2(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module quoter
 
@@ -416,7 +418,7 @@ import "rsc.io/sampler"
 // Tests that a module can be replaced by a different module path. Adapted
 // from the third part of mod_replace.txt.
 func TestModReplace3(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module quoter
 
@@ -449,7 +451,7 @@ package quote
 // mod_replace_import.txt, with example.com/v changed to /vv because Go 1.11
 // thinks /v is an invalid major version.
 func TestModReplaceImport(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module example.com/m
 
@@ -554,7 +556,7 @@ package v
 func TestModWorkspace(t *testing.T) {
 	testenv.NeedsGo1Point(t, 18)
 
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.work --
 go 1.18
 
@@ -590,7 +592,7 @@ package b
 func TestModWorkspaceReplace(t *testing.T) {
 	testenv.NeedsGo1Point(t, 18)
 
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.work --
 use m
 
@@ -649,7 +651,7 @@ func G() {
 func TestModWorkspaceReplaceOverride(t *testing.T) {
 	testenv.NeedsGo1Point(t, 18)
 
-	mt := setup(t, `-- go.work --
+	mt := setup(t, nil, `-- go.work --
 use m
 use n
 replace example.com/dep => ./dep3
@@ -714,7 +716,7 @@ func G() {
 func TestModWorkspacePrune(t *testing.T) {
 	testenv.NeedsGo1Point(t, 18)
 
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.work --
 go 1.18
 
@@ -883,7 +885,7 @@ package z
 // Tests that we handle GO111MODULE=on with no go.mod file. See #30855.
 func TestNoMainModule(t *testing.T) {
 	testenv.NeedsGo1Point(t, 12)
-	mt := setup(t, `
+	mt := setup(t, map[string]string{"GO111MODULE": "on"}, `
 -- x.go --
 package x
 `, "")
@@ -991,7 +993,9 @@ type modTest struct {
 
 // setup builds a test environment from a txtar and supporting modules
 // in testdata/mod, along the lines of TestScript in cmd/go.
-func setup(t *testing.T, main, wd string) *modTest {
+//
+// extraEnv is applied on top of the default test env.
+func setup(t *testing.T, extraEnv map[string]string, main, wd string) *modTest {
 	t.Helper()
 	testenv.NeedsGo1Point(t, 11)
 	testenv.NeedsTool(t, "go")
@@ -1021,12 +1025,15 @@ func setup(t *testing.T, main, wd string) *modTest {
 		Env: map[string]string{
 			"GOPATH":      filepath.Join(dir, "gopath"),
 			"GOMODCACHE":  "",
-			"GO111MODULE": "on",
+			"GO111MODULE": "auto",
 			"GOSUMDB":     "off",
 			"GOPROXY":     proxydir.ToURL(proxyDir),
 		},
 		WorkingDir:  filepath.Join(mainDir, wd),
 		GocmdRunner: &gocommand.Runner{},
+	}
+	for k, v := range extraEnv {
+		env.Env[k] = v
 	}
 	if *testDebug {
 		env.Logf = log.Printf
@@ -1166,7 +1173,7 @@ func removeDir(dir string) {
 
 // Tests that findModFile can find the mod files from a path in the module cache.
 func TestFindModFileModCache(t *testing.T) {
-	mt := setup(t, `
+	mt := setup(t, nil, `
 -- go.mod --
 module x
 
@@ -1215,6 +1222,72 @@ func TestInvalidModCache(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, _ = scanToSlice(resolver, nil)
+}
+
+func TestGetCandidatesRanking(t *testing.T) {
+	mt := setup(t, nil, `
+-- go.mod --
+module example.com
+
+require rsc.io/quote v1.5.1
+require rsc.io/quote/v3 v3.0.0
+
+-- rpackage/x.go --
+package rpackage
+import (
+	_ "rsc.io/quote"
+	_ "rsc.io/quote/v3"
+)
+`, "")
+	defer mt.cleanup()
+
+	if _, err := mt.env.invokeGo(context.Background(), "mod", "download", "rsc.io/quote/v2@v2.0.1"); err != nil {
+		t.Fatal(err)
+	}
+
+	type res struct {
+		relevance  float64
+		name, path string
+	}
+	want := []res{
+		// Stdlib
+		{7, "bytes", "bytes"},
+		{7, "http", "net/http"},
+		// Main module
+		{6, "rpackage", "example.com/rpackage"},
+		// Direct module deps with v2+ major version
+		{5.003, "quote", "rsc.io/quote/v3"},
+		// Direct module deps
+		{5, "quote", "rsc.io/quote"},
+		// Indirect deps
+		{4, "language", "golang.org/x/text/language"},
+		// Out of scope modules
+		{3, "quote", "rsc.io/quote/v2"},
+	}
+	var mu sync.Mutex
+	var got []res
+	add := func(c ImportFix) {
+		mu.Lock()
+		defer mu.Unlock()
+		for _, w := range want {
+			if c.StmtInfo.ImportPath == w.path {
+				got = append(got, res{c.Relevance, c.IdentName, c.StmtInfo.ImportPath})
+			}
+		}
+	}
+	if err := GetAllCandidates(context.Background(), add, "", "foo.go", "foo", mt.env); err != nil {
+		t.Fatalf("getAllCandidates() = %v", err)
+	}
+	sort.Slice(got, func(i, j int) bool {
+		ri, rj := got[i], got[j]
+		if ri.relevance != rj.relevance {
+			return ri.relevance > rj.relevance // Highest first.
+		}
+		return ri.name < rj.name
+	})
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("wanted candidates in order %v, got %v", want, got)
+	}
 }
 
 func BenchmarkScanModCache(b *testing.B) {
