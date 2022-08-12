@@ -13,6 +13,17 @@ builds:
     goarch:
       - amd64
       - arm64
+      - s390x
+      - ppc64le
+    ignore:
+      - goos: darwin
+        goarch: s390x
+      - goos: darwin
+        goarch: ppc64le
+      - goos: windows
+        goarch: s390x
+      - goos: windows
+        goarch: ppc64le
 brews:
   - name: gosimports
     tap:
