@@ -294,7 +294,6 @@ func separateImportsIntoGroups(r io.Reader, impsByGroup map[int][]*ast.ImportSpe
 			impInserted = true
 			continue
 		}
-		// !strings.Contains(s, "//") is need to fix github.com/rinchsan/gosimports/issues/69
 		if inImports && !strings.Contains(s, "//") && strings.Contains(s, ")") {
 			done = true
 			inImports = false
