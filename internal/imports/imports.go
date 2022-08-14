@@ -260,7 +260,6 @@ func separateImportsIntoGroups(r io.Reader, impsByGroup map[int][]*ast.ImportSpe
 	var out bytes.Buffer
 	in := bufio.NewReader(r)
 	inImports := false
-	done := false
 	impInserted := false
 	for {
 		s, err := in.ReadString('\n')
@@ -270,7 +269,7 @@ func separateImportsIntoGroups(r io.Reader, impsByGroup map[int][]*ast.ImportSpe
 			return nil, err
 		}
 
-		if !inImports && !done && strings.HasPrefix(s, "import") && strings.Contains(s, "(") {
+		if !inImports && strings.HasPrefix(s, "import") && strings.Contains(s, "(") {
 			inImports = true
 			fmt.Fprint(&out, s)
 			continue
@@ -296,7 +295,6 @@ func separateImportsIntoGroups(r io.Reader, impsByGroup map[int][]*ast.ImportSpe
 		}
 		// !strings.Contains(s, "//") is need to fix github.com/rinchsan/gosimports/issues/69
 		if inImports && !strings.Contains(s, "//") && strings.Contains(s, ")") {
-			done = true
 			inImports = false
 		}
 
