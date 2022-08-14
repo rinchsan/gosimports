@@ -816,6 +816,33 @@ var _ = fmt.unexported
 `,
 	},
 
+	// github.com/rinchsan/gosimports/issues/69
+	{
+		name: "factored_imports_add",
+		in: `package foo
+import (
+"fmt"
+blah "fmt" // ) fun
+)
+func something() {
+fmt.Println("")
+blah.Println("hi")
+}
+`,
+		out: `package foo
+
+import (
+	"fmt"
+	blah "fmt" // ) fun
+)
+
+func something() {
+	fmt.Println("")
+	blah.Println("hi")
+}
+`,
+	},
+
 	// FormatOnly
 	{
 		name:       "formatonly_works",
