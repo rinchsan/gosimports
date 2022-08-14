@@ -818,7 +818,7 @@ var _ = fmt.unexported
 
 	// github.com/rinchsan/gosimports/issues/69
 	{
-		name: "factored_imports_add",
+		name: "comment_including_right_paren",
 		in: `package foo
 import (
 "fmt"
