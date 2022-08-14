@@ -85,7 +85,7 @@ func Spans(output event.Exporter) event.Exporter {
 }
 
 func (s *Span) Start() core.Event {
-	// start never changes after construction, so we dont need to hold the mutex
+	// start never changes after construction, so we don't need to hold the mutex
 	return s.start
 }
 

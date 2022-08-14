@@ -59,12 +59,17 @@ func Process(filename string, src []byte, opt *Options) (formatted []byte, err e
 	return formatFile(fileSet, file, src, adjust, opt)
 }
 
-func formatFile(fileSet *token.FileSet, file *ast.File, src []byte, adjust func(orig []byte, src []byte) []byte, opt *Options) ([]byte, error) {
-	mergeImports(fileSet, file)
-	sortImports(opt.LocalPrefix, fileSet, file)
-	imps := astutil.Imports(fileSet, file)
+// formatFile formats the file syntax tree.
+// It may mutate the token.FileSet.
+//
+// If an adjust function is provided, it is called after formatting
+// with the original source (formatFile's src parameter) and the
+// formatted file, and returns the postpocessed result.
+func formatFile(fset *token.FileSet, file *ast.File, src []byte, adjust func(orig []byte, src []byte) []byte, opt *Options) ([]byte, error) {
+	mergeImports(file)
+	sortImports(opt.LocalPrefix, fset.File(file.Pos()), file)
 	impsByGroup := make(map[int][]*ast.ImportSpec)
-	for _, impSection := range imps {
+	for _, impSection := range astutil.Imports(fset, file) {
 		for _, importSpec := range impSection {
 			importPath, _ := strconv.Unquote(importSpec.Path.Value)
 			groupNum := importGroup(opt.LocalPrefix, importPath)
@@ -79,15 +84,14 @@ func formatFile(fileSet *token.FileSet, file *ast.File, src []byte, adjust func(
 	printConfig := &printer.Config{Mode: printerMode, Tabwidth: opt.TabWidth}
 
 	var buf bytes.Buffer
-	err := printConfig.Fprint(&buf, fileSet, file)
-	if err != nil {
+	if err := printConfig.Fprint(&buf, fset, file); err != nil {
 		return nil, err
 	}
 	out := buf.Bytes()
 	if adjust != nil {
 		out = adjust(src, out)
 	}
-	out, err = separateImportsIntoGroups(bytes.NewReader(out), impsByGroup)
+	out, err := separateImportsIntoGroups(bytes.NewReader(out), impsByGroup)
 	if err != nil {
 		return nil, err
 	}
@@ -221,11 +225,11 @@ func cutSpace(b []byte) (before, middle, after []byte) {
 }
 
 // matchSpace reformats src to use the same space context as orig.
-// 1) If orig begins with blank lines, matchSpace inserts them at the beginning of src.
-// 2) matchSpace copies the indentation of the first non-blank line in orig
-//    to every non-blank line in src.
-// 3) matchSpace copies the trailing space from orig and uses it in place
-//   of src's trailing space.
+//  1. If orig begins with blank lines, matchSpace inserts them at the beginning of src.
+//  2. matchSpace copies the indentation of the first non-blank line in orig
+//     to every non-blank line in src.
+//  3. matchSpace copies the trailing space from orig and uses it in place
+//     of src's trailing space.
 func matchSpace(orig []byte, src []byte) []byte {
 	before, _, after := cutSpace(orig)
 	i := bytes.LastIndex(before, []byte{'\n'})
