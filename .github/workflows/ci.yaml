@@ -21,11 +21,25 @@ jobs:
         with:
           version: v1.48
 
+  go-versions:
+    name: Fetch Go versions
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.value }}
+    steps:
+      - name: Fetch versions
+        id: versions
+        run: |
+          versions=$(curl -s 'https://go.dev/dl/?mode=json' | jq -c 'map(.version[2:])')
+          echo "::set-output name=value::${versions}"
+
   test:
     name: Test
+    needs:
+      - go-versions
     strategy:
       matrix:
-        go-version: [1.18.x, 1.19.x]
+        go-version: ${{ fromJson(needs.go-versions.outputs.versions) }}
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
