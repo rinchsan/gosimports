@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.value }}
-    steups:
+    steps:
       - name: Fetch latest version
         id: version
         run: |
