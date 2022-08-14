@@ -277,6 +277,9 @@ func separateImportsIntoGroups(r io.Reader, impsByGroup map[int][]*ast.ImportSpe
 		if inImports && !impInserted {
 			for i := 0; i <= 3; i++ {
 				for _, imp := range impsByGroup[i] {
+					if imp.Path.Value == `"C"` {
+						continue
+					}
 					if imp.Name != nil {
 						fmt.Fprint(&out, imp.Name.Name, " ")
 					}
