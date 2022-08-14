@@ -345,6 +345,37 @@ import "C"
 import "C"
 `,
 	},
+	{
+		name: "cgo_with_other_go_packages",
+		in: `package foo
+/*
+#include <foo.h>
+*/
+import "C"
+
+import (
+"fmt"
+)
+func f() {
+fmt.Println("Hello, world")
+}
+`,
+		out: `package foo
+
+/*
+#include <foo.h>
+*/
+import "C"
+
+import (
+	"fmt"
+)
+
+func f() {
+	fmt.Println("Hello, world")
+}
+`,
+	},
 
 	// Put some things in their own section
 	{
