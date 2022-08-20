@@ -1,4 +1,4 @@
-**Note: CLI interface (such as options) is likely to change a few times before we reach 1.0.0**
+**Note: APIs are likely to change a few times before we reach 1.0.0**
 
 # gosimports - simpler goimports
 
@@ -96,6 +96,30 @@ import (
 	_ "runtime/pprof" // trailing inline comments
 	"strings"
 )
+```
+
+## Module Usage
+
+### Installation
+
+```bash
+go get github.com/rinchsan/gosimports
+```
+
+### Example
+
+```go
+src, err := os.ReadFile("gosimports.go")
+if err != nil {
+    // error handling
+}
+
+formatted, err := gosimports.Process("", src, nil)
+if err != nil {
+    // error handling
+}
+
+fmt.Println(string(formatted))
 ```
 
 ## License
