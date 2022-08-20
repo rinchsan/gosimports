@@ -14,7 +14,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestProcess_from_src(t *testing.T) {
-	src, err := os.ReadFile("export.go")
+	src, err := os.ReadFile("gosimports.go")
 	if err != nil {
 		t.Fatal("expected: err == nil")
 	}
@@ -30,12 +30,12 @@ func TestProcess_from_src(t *testing.T) {
 }
 
 func TestProcess_from_filename(t *testing.T) {
-	formatted, err := gosimports.Process("export.go", nil, nil)
+	formatted, err := gosimports.Process("gosimports.go", nil, nil)
 	if err != nil {
 		t.Fatal("expected: err == nil")
 	}
 
-	src, err := os.ReadFile("export.go")
+	src, err := os.ReadFile("gosimports.go")
 	if err != nil {
 		t.Fatal("expected: err == nil")
 	}
