@@ -17,6 +17,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
 	"runtime/pprof"
 	"strings"
 
@@ -26,6 +27,9 @@ import (
 )
 
 var (
+	version     = ""
+	showVersion = flag.Bool("version", false, "show version")
+
 	// main operation modes
 	list   = flag.Bool("l", false, "list files whose formatting differs from gosimport's")
 	write  = flag.Bool("w", false, "write result to (source) file instead of stdout")
@@ -217,6 +221,17 @@ var parseFlags = func() []string {
 	return flag.Args()
 }
 
+func parseVersion() string {
+	if version != "" {
+		return version
+	}
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "unknown"
+	}
+	return info.Main.Version
+}
+
 func bufferedFileWriter(dest string) (w io.Writer, close func()) {
 	f, err := os.Create(dest)
 	if err != nil {
@@ -257,6 +272,11 @@ func gofmtMain() {
 			}
 			flush()
 		}()
+	}
+
+	if *showVersion {
+		fmt.Println(parseVersion())
+		return
 	}
 
 	if verbose {
