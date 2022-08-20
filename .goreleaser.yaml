@@ -4,6 +4,7 @@ changelog:
 builds:
   - id: gosimports
     main: ./cmd/gosimports/
+    ldflags: -s -w -X main.version={{ .Version }}
     env:
       - CGO_ENABLED=0
     goos:
