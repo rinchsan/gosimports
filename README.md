@@ -1,5 +1,5 @@
-
-**Note: APIs are likely to change a few times before we reach 1.0.0**
+> **Note**
+> APIs are likely to change a few times before we reach 1.0.0
 
 # gosimports - simpler goimports
 
