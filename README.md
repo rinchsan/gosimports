@@ -1,3 +1,4 @@
+
 **Note: APIs are likely to change a few times before we reach 1.0.0**
 
 # gosimports - simpler goimports
@@ -109,17 +110,29 @@ go get github.com/rinchsan/gosimports
 ### Example
 
 ```go
-src, err := os.ReadFile("gosimports.go")
-if err != nil {
-    // error handling
-}
+package main
 
-formatted, err := gosimports.Process("", src, nil)
-if err != nil {
-    // error handling
-}
+import (
+	"os"
 
-fmt.Println(string(formatted))
+	"github.com/rinchsan/gosimports"
+)
+
+func main() {
+	src, err := os.ReadFile("gosimports.go")
+	if err != nil {
+		// error handling
+	}
+
+	formatted, err := gosimports.Process("", src, nil)
+	if err != nil {
+		// error handling
+	}
+
+	if err := os.WriteFile("gosimports.go", formatted, 0644); err != nil {
+		// error handling
+	}
+}
 ```
 
 ## License
