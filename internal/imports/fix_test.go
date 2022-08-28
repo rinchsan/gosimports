@@ -377,6 +377,51 @@ func f() {
 `,
 	},
 
+	// Don't touch import lines in raw string
+	{
+		name: "import_lines_in_raw_string",
+		in: `package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("hello world")
+}
+
+const helloWorld = ` + "`" + `
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("hello world")
+}` + "`\n",
+		out: `package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("hello world")
+}
+
+const helloWorld = ` + "`" + `
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("hello world")
+}` + "`\n",
+	},
+
 	// Put some things in their own section
 	{
 		name: "make_sections",
