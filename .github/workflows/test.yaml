@@ -10,23 +10,6 @@ on:
 
 jobs:
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.49
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19.x
-      - name: Run govulncheck
-        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
-
   go-versions:
     name: Fetch Go versions
     runs-on: ubuntu-latest
@@ -38,6 +21,28 @@ jobs:
         run: |
           versions=$(curl -s 'https://go.dev/dl/?mode=json' | jq -c 'map(.version[2:])')
           echo "::set-output name=value::${versions}"
+
+  lint:
+    name: Lint
+    needs:
+      - go-versions
+    strategy:
+      matrix:
+        go-version: ${{ fromJson(needs.go-versions.outputs.versions) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.49
+      - name: Run govulncheck
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 
   test:
     name: Test

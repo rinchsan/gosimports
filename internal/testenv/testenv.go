@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"go/build"
 	exec "golang.org/x/sys/execabs"
-	"io/ioutil"
 	"os"
 	"runtime"
 	"runtime/debug"
@@ -70,7 +69,7 @@ func hasTool(tool string) error {
 	switch tool {
 	case "patch":
 		// check that the patch tools supports the -o argument
-		temp, err := ioutil.TempFile("", "patch-test")
+		temp, err := os.CreateTemp("", "patch-test")
 		if err != nil {
 			return err
 		}
