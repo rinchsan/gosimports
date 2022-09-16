@@ -20,6 +20,8 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.49
+      - name: Run govulncheck
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 
   go-versions:
     name: Fetch Go versions
