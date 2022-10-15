@@ -17,7 +17,7 @@ jobs:
         id: version
         run: |
           version=$(curl -s 'https://go.dev/dl/?mode=json' | jq -r 'map(.version[2:])[0]')
-          echo "::set-output name=value::${version}"
+          echo "value=${version}" >> $GITHUB_OUTPUT
 
   release:
     name: Release
