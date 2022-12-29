@@ -711,7 +711,7 @@ type PackageExport struct {
 	Exports []string
 }
 
-var RequiredGoEnvVars = []string{"GO111MODULE", "GOFLAGS", "GOINSECURE", "GOMOD", "GOMODCACHE", "GONOPROXY", "GONOSUMDB", "GOPATH", "GOPROXY", "GOROOT", "GOSUMDB", "GOWORK"}
+var requiredGoEnvVars = []string{"GO111MODULE", "GOFLAGS", "GOINSECURE", "GOMOD", "GOMODCACHE", "GONOPROXY", "GONOSUMDB", "GOPATH", "GOPROXY", "GOROOT", "GOSUMDB", "GOWORK"}
 
 // ProcessEnv contains environment variables and settings that affect the use of
 // the go command, the go/build package, etc.
@@ -781,7 +781,7 @@ func (e *ProcessEnv) init() error {
 	}
 
 	foundAllRequired := true
-	for _, k := range RequiredGoEnvVars {
+	for _, k := range requiredGoEnvVars {
 		if _, ok := e.Env[k]; !ok {
 			foundAllRequired = false
 			break
@@ -797,7 +797,7 @@ func (e *ProcessEnv) init() error {
 	}
 
 	goEnv := map[string]string{}
-	stdout, err := e.invokeGo(context.TODO(), "env", append([]string{"-json"}, RequiredGoEnvVars...)...)
+	stdout, err := e.invokeGo(context.TODO(), "env", append([]string{"-json"}, requiredGoEnvVars...)...)
 	if err != nil {
 		return err
 	}
