@@ -883,7 +883,6 @@ package z
 
 // Tests that we handle GO111MODULE=on with no go.mod file. See #30855.
 func TestNoMainModule(t *testing.T) {
-	testenv.NeedsGo1Point(t, 12)
 	mt := setup(t, map[string]string{"GO111MODULE": "on"}, `
 -- x.go --
 package x
@@ -996,7 +995,6 @@ type modTest struct {
 // extraEnv is applied on top of the default test env.
 func setup(t *testing.T, extraEnv map[string]string, main, wd string) *modTest {
 	t.Helper()
-	testenv.NeedsGo1Point(t, 11)
 	testenv.NeedsTool(t, "go")
 
 	proxyOnce.Do(func() {
@@ -1193,7 +1191,6 @@ import _ "rsc.io/quote"
 
 // Tests that crud in the module cache is ignored.
 func TestInvalidModCache(t *testing.T) {
-	testenv.NeedsGo1Point(t, 11)
 	dir, err := os.MkdirTemp("", t.Name())
 	if err != nil {
 		t.Fatal(err)
@@ -1290,7 +1287,6 @@ import (
 }
 
 func BenchmarkScanModCache(b *testing.B) {
-	testenv.NeedsGo1Point(b, 11)
 	env := &ProcessEnv{
 		GocmdRunner: &gocommand.Runner{},
 		Logf:        log.Printf,
