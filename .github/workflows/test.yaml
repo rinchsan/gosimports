@@ -42,7 +42,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
         with:
           version: v1.51
       - name: Run govulncheck
